@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About - Arutala Persona Agent</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+  
+  <style>
+    .about-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 60px 32px;
+    }
+    
+    .about-hero {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    .about-hero h1 {
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    
+    .about-hero .highlight {
+      color: var(--primary);
+    }
+    
+    .about-hero p {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    
+    .about-section {
+      background: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--border);
+    }
+    
+    .about-section h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .about-section p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    
+    .about-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    
+    .about-section li {
+      padding: 12px 0;
+      padding-left: 32px;
+      position: relative;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    
+    .about-section li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 18px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin: 32px 0;
+    }
+    
+    .stat-card {
+      text-align: center;
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(8,145,178,0.05), rgba(8,145,178,0.1));
+      border-radius: 12px;
+      border: 2px solid rgba(8,145,178,0.2);
+    }
+    
+    .stat-number {
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--primary);
+      display: block;
+      margin-bottom: 8px;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    
+    .team-section {
+      text-align: center;
+      margin-top: 48px;
+    }
+    
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      margin-top: 32px;
+    }
+    
+    .team-member {
+      background: white;
+      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+    }
+    
+    .team-member:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--primary);
+    }
+    
+    .team-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      font-size: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    
+    .team-member h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    
+    .team-member .role {
+      font-size: 14px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    
+    .team-member p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      text-align: center;
+      margin-top: 48px;
+    }
+    
+    .cta-section h2 {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    
+    .cta-section p {
+      font-size: 16px;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .cta-button {
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .cta-button.primary {
+      background: white;
+      color: var(--primary);
+    }
+    
+    .cta-button.secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ambient Blobs -->
+<div class="blob-field">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="inner">
+    <div class="logo">
+      <span style="font-weight:800; color: var(--primary);">Arutala</span>
+      <span class="brand">Persona Agent</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Personas</a>
+      <a href="chatbot.html" class="nav-link">Try Chat</a>
+      <a href="about.html" class="nav-link">About</a>
+    </div>
+  </div>
+</nav>
+
+<div class="about-container">
+  
+  <!-- Hero -->
+  <div class="about-hero">
+    <h1>Tentang <span class="highlight">Arutala Persona Agent</span></h1>
+    <p>
+      Sebuah inovasi dalam teknologi AI yang merayakan keberagaman bahasa dan budaya Indonesia
+    </p>
+  </div>
+  
+  <!-- Mission -->
+  <div class="about-section">
+    <h2>🎯 Misi Kami</h2>
+    <p>
+      <strong>Arutala Persona Agent</strong> hadir dengan misi untuk melestarikan dan merayakan kekayaan bahasa Indonesia. Kami percaya bahwa setiap dialek, setiap gaya bicara, adalah bagian berharga dari identitas budaya kita.
+    </p>
+    <p>
+      Melalui teknologi AI yang canggih, kami menghadirkan 21 persona unik yang mencerminkan keberagaman cara berkomunikasi masyarakat Indonesia — dari Bahasa Indonesia formal hingga dialek lokal seperti Jawa, Sunda, dan Cirebon.
+    </p>
+  </div>
+  
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-number">21</span>
+      <span class="stat-label">Persona Unik</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">4</span>
+      <span class="stat-label">Kategori Bahasa</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">14</span>
+      <span class="stat-label">Dialek Regional</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">∞</span>
+      <span class="stat-label">Kemungkinan</span>
+    </div>
+  </div>
+  
+  <!-- What We Do -->
+  <div class="about-section">
+    <h2>💡 Apa yang Kami Lakukan</h2>
+    <p>
+      Arutala Persona Agent memungkinkan AI untuk berkomunikasi dalam berbagai gaya bahasa Indonesia, meliputi:
+    </p>
+    <ul>
+      <li><strong>Bahasa Indonesia</strong> — Formal, Santai, Gaul, Akademis, Bisnis, Kreatif, Teknologi, dan Jurnalistik</li>
+      <li><strong>Bahasa Jawa</strong> — Mataraman, Suroboyoan, Ngapak, Kediri, Kedu, Semarangan, Ngapak Pantura, dan Osing</li>
+      <li><strong>Campuran</strong> — Indo-Jawa Mixed dan Jawa-Indonesia yang natural</li>
+      <li><strong>Sunda & Perbatasan</strong> — Sunda Parahyangan, Sunda Banten, dan Cirebonan</li>
+    </ul>
+  </div>
+  
+  <!-- Technology -->
+  <div class="about-section">
+    <h2>🔬 Teknologi</h2>
+    <p>
+      Kami menggunakan teknologi Natural Language Processing (NLP) dan machine learning terkini untuk:
+    </p>
+    <ul>
+      <li>Memahami konteks dan nuansa setiap gaya bahasa</li>
+      <li>Menghasilkan respons yang natural dan autentik</li>
+      <li>Menyesuaikan tone, diksi, dan struktur kalimat sesuai persona</li>
+      <li>Melestarikan karakteristik unik setiap dialek regional</li>
+    </ul>
+  </div>
+  
+  <!-- Arutala Ecosystem -->
+  <div class="about-section">
+    <h2>🌟 Bagian dari Ekosistem Arutala</h2>
+    <p>
+      Arutala Persona Agent adalah bagian dari <strong>Arutala Aksara</strong>, sebuah inisiatif teknologi yang berfokus pada pelestarian budaya dan bahasa Nusantara.
+    </p>
+    <p>
+      <strong>Arutala Aksara</strong> adalah aplikasi yang menggunakan AI untuk mengenali, memahami, dan menerjemahkan aksara tradisional Nusantara seperti Jawa dan Lampung.
+    </p>
+    <p>
+      Bersama-sama, kami menciptakan teknologi yang tidak hanya modern, tetapi juga berakar pada kekayaan budaya Indonesia.
+    </p>
+  </div>
+  
+  <!-- Values -->
+  <div class="about-section">
+    <h2>❤️ Nilai-Nilai Kami</h2>
+    <ul>
+      <li><strong>Pelestarian Budaya</strong> — Menjaga warisan bahasa dan dialek Indonesia</li>
+      <li><strong>Inovasi Teknologi</strong> — Menggunakan AI untuk tujuan sosial dan budaya</li>
+      <li><strong>Inklusivitas</strong> — Merayakan keberagaman tanpa diskriminasi</li>
+      <li><strong>Aksesibilitas</strong> — Membuat teknologi mudah digunakan untuk semua</li>
+      <li><strong>Pendidikan</strong> — Mengedukasi tentang kekayaan bahasa Indonesia</li>
+    </ul>
+  </div>
+  
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Mulai Jelajahi Sekarang! 🚀</h2>
+    <p>
+      Rasakan pengalaman berkomunikasi dengan AI dalam berbagai gaya bahasa Indonesia
+    </p>
+    <div class="cta-buttons">
+      <a href="index.html" class="cta-button primary">
+        Lihat Semua Persona
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="chatbot.html" class="cta-button secondary">
+        Coba Chat Sekarang
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+  
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">Arutala Persona Agent</div>
+  <p>Merayakan keberagaman bahasa Indonesia 🇮🇩</p>
+  <p style="margin-top:16px; font-size:14px;">
+    Part of <a href="https://www.arutalaaksara.com" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">Arutala Aksara</a> ecosystem
+  </p>
+  <p style="margin-top:8px; font-size:12px; opacity:0.7;">
+    Email: contact@arutalaaksara.com | 
+    <a href="https://instagram.com/arutala.app" target="_blank" style="color: var(--muted); text-decoration: none;">Instagram</a>
+  </p>
+  <p style="margin-top:16px; font-size:12px; opacity:0.6;">© 2025 Arutala Aksara. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

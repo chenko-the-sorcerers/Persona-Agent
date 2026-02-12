@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Persona Agent — Pilih Gaya Bicaramu</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Ambient Blobs -->
+<div class="blob-field">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="inner">
+    <div class="logo">
+      <span style="font-weight:800; color: var(--primary);">Arutala</span>
+      <span class="brand">Persona Agent</span>
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation">
+      <span class="nav-toggle-line"></span>
+      <span class="nav-toggle-line"></span>
+      <span class="nav-toggle-line"></span>
+    </button>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Personas</a>
+      <a href="chatbot.html" class="nav-link">Try Chat</a>
+      <a href="about.html" class="nav-link">About</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero container">
+  <div class="hero-eyebrow"><span class="dot"></span>Pilih Gaya Bicaramu</div>
+  <h1>Satu Identitas,<br><span class="grad">Banyak Bahasa</span></h1>
+  <p>Eksplorasi keragaman gaya bicara Indonesia dari Bahasa Indonesia Formal hingga Bahasa Osing Banyuwangi. 21 persona untuk temukan gaya yang paling cocok buat kamu.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">8</span><span class="stat-lbl">Gaya Bahasa Indonesia</span></div>
+    <div class="stat"><span class="stat-num">8</span><span class="stat-lbl">Dialek Jawa</span></div>
+    <div class="stat"><span class="stat-num">2</span><span class="stat-lbl">Campuran / Mixed</span></div>
+    <div class="stat"><span class="stat-num">3</span><span class="stat-lbl">Sunda & Perbatasan</span></div>
+  </div>
+</section>
+
+<main class="container">
+
+  <!-- SECTION 1: BAHASA INDONESIA -->
+  <div class="section-header sec-id fade-in">
+    <div class="section-tag">Section 1</div>
+    <div class="section-title">Bahasa Indonesia</div>
+    <div class="section-sub">Delapan gaya bicara Bahasa Indonesia dari gaul hingga akademik dan profesional</div>
+  </div>
+  <div class="persona-grid" id="grid-1"></div>
+
+  <!-- SECTION 2: BAHASA JAWA -->
+  <div class="section-header sec-jw fade-in">
+    <div class="section-tag">Section 2</div>
+    <div class="section-title">Bahasa Jawa & Osing Banyuwangi</div>
+    <div class="section-sub">Delapan dialek Jawa — dari Mataraman yang halus sampai Suroboyoan yang blak-blakan</div>
+  </div>
+  <div class="persona-grid" id="grid-2"></div>
+
+  <!-- SECTION 3: CAMPURAN -->
+  <div class="section-header sec-mx fade-in">
+    <div class="section-tag">Section 3</div>
+    <div class="section-title">Campuran / Mixed</div>
+    <div class="section-sub">Percampuran alami Indonesia-Jawa yang dipakai sehari-hari</div>
+  </div>
+  <div class="persona-grid" id="grid-3"></div>
+
+  <!-- SECTION 4: SUNDA & PERBATASAN -->
+  <div class="section-header sec-sn fade-in">
+    <div class="section-tag">Section 4</div>
+    <div class="section-title">Sunda & Perbatasan</div>
+    <div class="section-sub">Dari Sunda lemes Bandung sampai Jawara Banten dan Cirebon yang fusion</div>
+  </div>
+  <div class="persona-grid" id="grid-4"></div>
+
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">Arutala Persona Agent</div>
+  <p>Merayakan keberagaman Bahasa Daerah di Indonesia 🇮🇩</p>
+  <p style="margin-top:16px; font-size:14px;">
+    Part of <a href="https://www.arutalaaksara.com" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">Arutala Aksara</a> ecosystem
+  </p>
+  <p style="margin-top:8px; font-size:12px; opacity:0.7;">21 Persona • 4 Kategori • Satu Kesatuan</p>
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header" id="modal-header">
+      <div class="modal-header-bg" id="modal-header-bg"></div>
+      <div class="modal-header-geo"></div>
+      <div class="modal-char" id="modal-char"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-top">
+        <div class="modal-icon" id="modal-icon"></div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-region" id="modal-region"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-sample" id="modal-sample">
+        <div class="modal-sample-lbl">Contoh Bicara</div>
+        <div class="modal-sample-text" id="modal-sample-text"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="analytics.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  (function () {
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    const toggle = nav.querySelector('.nav-toggle');
+    const links = nav.querySelector('.nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', function () {
+      nav.classList.toggle('nav-open');
+    });
+  })();
+
+  // Hitung page view untuk halaman utama
+  if (typeof trackEvent === 'function') {
+    trackEvent('page_view', '/index.html');
+  }
+</script>
+
+</body>
+</html>
