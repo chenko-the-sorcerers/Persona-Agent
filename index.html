@@ -24,10 +24,10 @@
 <!-- Nav -->
 <nav>
   <div class="inner">
-    <div class="logo">
+    <a href="index.html" class="logo" style="text-decoration:none;">
       <span style="font-weight:800; color: var(--primary);">Arutala</span>
       <span class="brand">Persona Agent</span>
-    </div>
+    </a>
     <button class="nav-toggle" type="button" aria-label="Toggle navigation">
       <span class="nav-toggle-line"></span>
       <span class="nav-toggle-line"></span>
@@ -36,6 +36,7 @@
     <div class="nav-links">
       <a href="index.html" class="nav-link">Personas</a>
       <a href="chatbot.html" class="nav-link">Try Chat</a>
+      <a href="login.html" class="nav-link">Login</a>
       <a href="about.html" class="nav-link">About</a>
     </div>
   </div>
@@ -120,6 +121,14 @@
         <div class="modal-sample-lbl">Contoh Bicara</div>
         <div class="modal-sample-text" id="modal-sample-text"></div>
       </div>
+      <div class="modal-actions">
+        <button class="modal-try-btn" id="modal-try-btn" type="button">
+          Try Chat dengan Persona ini
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -137,6 +146,13 @@
     if (!toggle || !links) return;
     toggle.addEventListener('click', function () {
       nav.classList.toggle('nav-open');
+    });
+
+    // Tutup menu ketika link diklik (mobile)
+    links.addEventListener('click', function (e) {
+      if (e.target.closest('.nav-link')) {
+        nav.classList.remove('nav-open');
+      }
     });
   })();
 

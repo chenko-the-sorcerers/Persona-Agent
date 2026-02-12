@@ -209,6 +209,7 @@
     .chat-input-form {
       display: flex;
       gap: 12px;
+      align-items: center;
     }
     
     .chat-input-form input {
@@ -219,6 +220,7 @@
       font-family: 'Poppins', sans-serif;
       font-size: 14px;
       transition: all 0.2s;
+      min-width: 0;
     }
     
     .chat-input-form input:focus {
@@ -228,7 +230,7 @@
     }
     
     .chat-input-form button {
-      padding: 12px 24px;
+      padding: 12px 20px;
       background: var(--primary);
       color: white;
       border: none;
@@ -241,6 +243,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
     }
     
     .chat-input-form button:hover {
@@ -290,6 +293,29 @@
       color: var(--primary);
       transform: translateY(-2px);
     }
+    
+    @media (max-width: 640px) {
+      .chat-container {
+        padding: 24px 16px 40px;
+      }
+      .chat-box {
+        min-height: 420px;
+      }
+      .chat-input-wrapper {
+        padding: 14px 12px 16px;
+      }
+      .chat-input-form {
+        gap: 8px;
+      }
+      .chat-input-form input {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+      .chat-input-form button {
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -305,10 +331,10 @@
 <!-- Nav -->
 <nav>
   <div class="inner">
-    <div class="logo">
+    <a href="index.html" class="logo" style="text-decoration:none;">
       <span style="font-weight:800; color: var(--primary);">Arutala</span>
       <span class="brand">Persona Agent</span>
-    </div>
+    </a>
     <button class="nav-toggle" type="button" aria-label="Toggle navigation">
       <span class="nav-toggle-line"></span>
       <span class="nav-toggle-line"></span>
@@ -317,6 +343,7 @@
     <div class="nav-links">
       <a href="index.html" class="nav-link">Personas</a>
       <a href="chatbot.html" class="nav-link">Try Chat</a>
+      <a href="login.html" class="nav-link">Login</a>
       <a href="about.html" class="nav-link">About</a>
     </div>
   </div>
@@ -387,6 +414,11 @@
     toggle.addEventListener('click', function () {
       nav.classList.toggle('nav-open');
     });
+    links.addEventListener('click', function (e) {
+      if (e.target.closest('.nav-link')) {
+        nav.classList.remove('nav-open');
+      }
+    });
   })();
 
   let selectedPersona = null;
@@ -401,6 +433,21 @@
       option.textContent = `${persona.icon} ${persona.name} - ${persona.region}`;
       select.appendChild(option);
     });
+
+    // Cek query ?persona=... untuk pre-select dari halaman persona
+    const params = new URLSearchParams(window.location.search);
+    const initialPersona = params.get('persona');
+    if (initialPersona && personas[initialPersona]) {
+      select.value = initialPersona;
+      selectedPersona = initialPersona;
+      const persona = personas[initialPersona];
+      addBotMessage(`Halo! Sekarang aku pakai persona "${persona.name}". ${persona.desc.substring(0, 100)}...`);
+      document.getElementById('welcome').style.display = 'none';
+
+      if (typeof trackEvent === 'function') {
+        trackEvent('persona_open', initialPersona);
+      }
+    }
   }
   
   // Handle persona selection

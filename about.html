@@ -251,13 +251,19 @@
 <!-- Nav -->
 <nav>
   <div class="inner">
-    <div class="logo">
+    <a href="index.html" class="logo" style="text-decoration:none;">
       <span style="font-weight:800; color: var(--primary);">Arutala</span>
       <span class="brand">Persona Agent</span>
-    </div>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation">
+      <span class="nav-toggle-line"></span>
+      <span class="nav-toggle-line"></span>
+      <span class="nav-toggle-line"></span>
+    </button>
     <div class="nav-links">
       <a href="index.html" class="nav-link">Personas</a>
       <a href="chatbot.html" class="nav-link">Try Chat</a>
+      <a href="login.html" class="nav-link">Login</a>
       <a href="about.html" class="nav-link">About</a>
     </div>
   </div>
@@ -395,6 +401,29 @@
   </p>
   <p style="margin-top:16px; font-size:12px; opacity:0.6;">© 2025 Arutala Aksara. All rights reserved.</p>
 </footer>
+
+<script src="analytics.js"></script>
+<script>
+  (function () {
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    const toggle = nav.querySelector('.nav-toggle');
+    const links = nav.querySelector('.nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', function () {
+      nav.classList.toggle('nav-open');
+    });
+    links.addEventListener('click', function (e) {
+      if (e.target.closest('.nav-link')) {
+        nav.classList.remove('nav-open');
+      }
+    });
+  })();
+
+  if (typeof trackEvent === 'function') {
+    trackEvent('page_view', '/about.html');
+  }
+</script>
 
 </body>
 </html>

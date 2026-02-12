@@ -206,10 +206,10 @@
 <!-- Nav -->
 <nav>
   <div class="inner">
-    <div class="logo">
+    <a href="index.html" class="logo" style="text-decoration:none;">
       <span style="font-weight:800; color: var(--primary);">Arutala</span>
       <span class="brand">Persona Agent</span>
-    </div>
+    </a>
     <button class="nav-toggle" type="button" aria-label="Toggle navigation">
       <span class="nav-toggle-line"></span>
       <span class="nav-toggle-line"></span>
@@ -218,6 +218,7 @@
     <div class="nav-links">
       <a href="index.html" class="nav-link">Personas</a>
       <a href="chatbot.html" class="nav-link">Try Chat</a>
+      <a href="login.html" class="nav-link">Login</a>
       <a href="about.html" class="nav-link">About</a>
     </div>
   </div>
@@ -289,7 +290,7 @@
     <table class="table" id="table-personas">
       <thead>
         <tr>
-          <th>Persona ID</th>
+          <th>Persona</th>
           <th>Clicks</th>
         </tr>
       </thead>
@@ -331,6 +332,7 @@
 </footer>
 
 <!-- Scripts -->
+<script src="data.js"></script>
 <script src="analytics.js"></script>
 <script src="auth.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -343,6 +345,11 @@
     if (!toggle || !links) return;
     toggle.addEventListener('click', function () {
       nav.classList.toggle('nav-open');
+    });
+    links.addEventListener('click', function (e) {
+      if (e.target.closest('.nav-link')) {
+        nav.classList.remove('nav-open');
+      }
     });
   })();
 
@@ -423,11 +430,19 @@
     } else {
       sortedPersonas.forEach(([id, count]) => {
         const tr = document.createElement('tr');
-        const tdId = document.createElement('td');
+        const tdPersona = document.createElement('td');
         const tdCount = document.createElement('td');
-        tdId.innerHTML = '<span class="pill">#' + String(id).padStart(2, '0') + '</span>';
+
+        const num = String(id).padStart(2, '0');
+        let label = `#${num}`;
+        if (window.personas && personas[id]) {
+          const p = personas[id];
+          label = `#${num} · ${p.name}`;
+        }
+
+        tdPersona.textContent = label;
         tdCount.textContent = count;
-        tr.appendChild(tdId);
+        tr.appendChild(tdPersona);
         tr.appendChild(tdCount);
         personasBody.appendChild(tr);
       });
@@ -462,7 +477,13 @@
     // Charts
     const pageLabels = sortedPages.map(([path]) => path);
     const pageValues = sortedPages.map(([, count]) => count);
-    const personaLabels = sortedPersonas.map(([id]) => '#' + String(id).padStart(2, '0'));
+    const personaLabels = sortedPersonas.map(([id]) => {
+      const num = String(id).padStart(2, '0');
+      if (window.personas && personas[id]) {
+        return `${num} ${personas[id].name}`;
+      }
+      return `#${num}`;
+    });
     const personaValues = sortedPersonas.map(([, count]) => count);
 
     const pageCanvas = document.getElementById('chart-pages');

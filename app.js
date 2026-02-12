@@ -63,8 +63,8 @@ function createPersonaCard(id, persona) {
         <div class="card-name">${persona.name}</div>
         <div class="card-region">${persona.region}</div>
         <div class="card-desc">${persona.desc}</div>
-        <button class="card-try" onclick="event.stopPropagation(); openModal(${id})">
-          Coba Persona
+        <button class="card-try" onclick="event.stopPropagation(); goToChat(${id})">
+          Try Chat
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
@@ -72,6 +72,13 @@ function createPersonaCard(id, persona) {
       </div>
     </div>
   `;
+}
+
+// Navigate langsung ke halaman chat dengan persona terpilih
+function goToChat(id) {
+  const url = new URL('chatbot.html', window.location.href);
+  url.searchParams.set('persona', id);
+  window.location.href = url.toString();
 }
 
 /**
@@ -122,6 +129,14 @@ function openModal(id) {
   document.getElementById('modal-desc').textContent = p.desc;
   document.getElementById('modal-sample').style.borderLeftColor = p.color[0];
   document.getElementById('modal-sample-text').textContent = p.sample;
+
+  // Set Try Chat button di dalam modal
+  const tryBtn = document.getElementById('modal-try-btn');
+  if (tryBtn) {
+    tryBtn.onclick = function () {
+      goToChat(id);
+    };
+  }
 
   // Show modal
   document.getElementById('modal').classList.add('open');
