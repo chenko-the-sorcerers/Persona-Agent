@@ -9,7 +9,52 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="src/css/styles.css" />
+  
+  <!-- Load critical scripts in head for immediate availability -->
+  <script>
+    // Inline personas data for immediate availability
+    window.personasData = {
+      1: { name: "Formal / Resmi", region: "Bahasa Indonesia Baku", icon: "💼" },
+      2: { name: "Jaksel", region: "Jakarta Selatan Urban", icon: "☕" },
+      3: { name: "Non-Baku Harian", region: "Bahasa Indonesia Sehari-hari", icon: "💬" },
+      4: { name: "Gen Z Viral", region: "TikTok / Bahasa Gaul", icon: "🔥" },
+      5: { name: "Gen Alpha Brainrot", region: "Internet Culture / Gaming", icon: "🎮" },
+      6: { name: "Corporate", region: "Bahasa Indonesia Bisnis", icon: "📊" },
+      7: { name: "Akademis", region: "Bahasa Indonesia Ilmiah", icon: "🎓" },
+      8: { name: "Kalimat Pasif", region: "Bahasa Indonesia Formal Pasif", icon: "📄" },
+      9: { name: "Jawa Baku", region: "Jawa Tengah / Yogyakarta", icon: "🏛️" },
+      10: { name: "Jawa Ngoko", region: "Jawa Blak-blakan", icon: "🗣️" },
+      11: { name: "Jawa Suroboyoan", region: "Surabaya / Jawa Timur", icon: "🌊" },
+      12: { name: "Jawa Madiun", region: "Madiun / Nganjuk", icon: "🌾" },
+      13: { name: "Jawa Semarangan", region: "Semarang Pesisir", icon: "⚓" },
+      14: { name: "Jawa Solo", region: "Surakarta Mataram", icon: "👑" },
+      15: { name: "Jawa Banyumasan", region: "Purwokerto / Banyumas", icon: "🌄" },
+      16: { name: "Osing Banyuwangi", region: "Using / Banyuwangi", icon: "🌅" },
+      17: { name: "Campuran Jawa-Indo", region: "Mixed Natural", icon: "🔀" },
+      18: { name: "Jowo-Kawi", region: "Javanese-Indonesian Hybrid", icon: "🎭" },
+      19: { name: "Sunda Lemes", region: "Bandung Halus", icon: "🌸" },
+      20: { name: "Jawara Banten", region: "Serang / Tangerang", icon: "⚔️" },
+      21: { name: "Cirebon", region: "Cirebon Fusion", icon: "🌊" }
+    };
+  </script>
+  
+  <!-- Load data and persona scripts first -->
+  <script src="src/js/config.js"></script>
+  <script src="src/js/auth.js"></script>
+  <script>
+    // REQUIRE LOGIN TO ACCESS CHATBOT
+    // This will redirect to login.html if user is not authenticated
+    if (window.authService && !authService.requireAuth()) {
+      // User not logged in, will be redirected
+    }
+  </script>
+  <script src="src/js/data.js"></script>
+  <script src="src/js/persona.js"></script>
+  <script src="src/js/utils/helpers.js"></script>
+  <script src="src/js/api.js"></script>
+  <script src="src/js/main.js"></script>
+  <script src="src/js/chat.js"></script>
   
   <style>
     /* Chatbot specific styles */
@@ -106,6 +151,7 @@
       gap: 12px;
       max-width: 80%;
       animation: fadeInUp 0.3s ease;
+      margin-bottom: 12px;
     }
     
     @keyframes fadeInUp {
@@ -119,9 +165,13 @@
       }
     }
     
-    .message.user {
+    .message-user {
       align-self: flex-end;
       flex-direction: row-reverse;
+    }
+    
+    .message-assistant {
+      align-self: flex-start;
     }
     
     .message-avatar {
@@ -133,19 +183,16 @@
       justify-content: center;
       font-size: 18px;
       flex-shrink: 0;
-    }
-    
-    .message.user .message-avatar {
-      background: var(--primary);
-      color: white;
-    }
-    
-    .message.bot .message-avatar {
       background: #f1f5f9;
       color: var(--text);
     }
     
-    .message-content {
+    .message-user .message-avatar {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .message-bubble {
       background: #f1f5f9;
       padding: 12px 16px;
       border-radius: 12px;
@@ -153,27 +200,35 @@
       line-height: 1.6;
     }
     
-    .message.user .message-content {
+    .message-user .message-bubble {
       background: var(--primary);
       color: white;
     }
     
-    .message.bot .message-content {
+    .message-assistant .message-bubble {
       background: #f1f5f9;
       color: var(--text);
     }
     
-    .typing-indicator {
-      display: none;
-      gap: 4px;
-      padding: 12px 16px;
+    .message-content {
+      margin-bottom: 4px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
     
-    .typing-indicator.active {
+    .message-time {
+      font-size: 11px;
+      opacity: 0.6;
+      margin-top: 4px;
+    }
+    
+    .typing-indicator .typing-dots {
       display: flex;
+      gap: 4px;
+      padding: 4px 0;
     }
     
-    .typing-dot {
+    .typing-dots span {
       width: 8px;
       height: 8px;
       border-radius: 50%;
@@ -181,11 +236,11 @@
       animation: typing 1.4s infinite;
     }
     
-    .typing-dot:nth-child(2) {
+    .typing-dots span:nth-child(2) {
       animation-delay: 0.2s;
     }
     
-    .typing-dot:nth-child(3) {
+    .typing-dots span:nth-child(3) {
       animation-delay: 0.4s;
     }
     
@@ -198,6 +253,12 @@
         transform: translateY(-10px);
         opacity: 1;
       }
+    }
+    
+    .message-error .message-bubble {
+      background: #fee2e2;
+      color: #991b1b;
+      border-left: 3px solid #ef4444;
     }
     
     .chat-input-wrapper {
@@ -229,7 +290,7 @@
       box-shadow: 0 0 0 3px rgba(8,145,178,0.1);
     }
     
-    .chat-input-form button {
+    .chat-send-btn {
       padding: 12px 20px;
       background: var(--primary);
       color: white;
@@ -246,13 +307,13 @@
       flex-shrink: 0;
     }
     
-    .chat-input-form button:hover {
+    .chat-send-btn:hover {
       background: var(--primary-dark);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(8,145,178,0.3);
     }
     
-    .chat-input-form button:active {
+    .chat-send-btn:active {
       transform: translateY(0);
     }
     
@@ -343,8 +404,17 @@
     <div class="nav-links">
       <a href="index.html" class="nav-link">Personas</a>
       <a href="chatbot.html" class="nav-link">Try Chat</a>
-      <a href="login.html" class="nav-link">Login</a>
-      <a href="about.html" class="nav-link">About</a>
+      <a href="src/pages/about.html" class="nav-link">About</a>
+      
+      <!-- User menu (shown when logged in) -->
+      <div class="user-menu" id="user-menu" style="display:none; position:relative;">
+        <button class="user-avatar-btn" id="user-avatar-btn" style="background:var(--primary); color:white; border:none; padding:8px 16px; border-radius:20px; cursor:pointer; font-family:'Poppins'; font-weight:600; font-size:13px;">
+          <span id="user-name-display">User</span>
+        </button>
+      </div>
+      
+      <!-- Login link (shown when not logged in) -->
+      <a href="login.html" class="nav-link" id="login-link">Login</a>
     </div>
   </div>
 </nav>
@@ -380,14 +450,12 @@
         <input 
           type="text" 
           id="chat-input" 
+          class="chat-input"
           placeholder="Ketik pesan..." 
           autocomplete="off"
         />
-        <button type="submit">
+        <button type="submit" class="chat-send-btn">
           <span>Kirim</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-          </svg>
         </button>
       </form>
     </div>
@@ -397,14 +465,99 @@
 <!-- Footer -->
 <footer>
   <div class="footer-logo">Arutala Persona Agent</div>
-  <p>Merayakan keberagaman bahasa Indonesia 🇮🇩</p>
-  <p style="margin-top:8px; font-size:12px; opacity:0.7;">Part of <a href="https://www.arutalaaksara.com" style="color: var(--primary); text-decoration: none;">Arutala Aksara</a> ecosystem</p>
+  <p>Merayakan keberagaman Bahasa Daerah di Indonesia 🇮🇩</p>
 </footer>
 
-<!-- Scripts -->
-<script src="analytics.js"></script>
-<script src="data.js"></script>
+<script src="src/js/analytics.js"></script>
 <script>
+  // Initialize when DOM loads
+  document.addEventListener('DOMContentLoaded', function() {
+    const personaSelect = document.getElementById('persona-select');
+    
+    // Update user menu based on auth status
+    if (authService.isAuthenticated()) {
+      const user = authService.getUser();
+      document.getElementById('user-menu').style.display = 'block';
+      document.getElementById('login-link').style.display = 'none';
+      document.getElementById('user-name-display').textContent = user.name || 'User';
+      
+      // Add logout handler
+      document.getElementById('user-avatar-btn').addEventListener('click', function() {
+        if (confirm('Yakin ingin logout?')) {
+          authService.logout();
+        }
+      });
+    }
+    
+    if (personaSelect) {
+      // Clear existing options
+      personaSelect.innerHTML = '<option value="">-- Pilih Persona --</option>';
+      
+      // Use inline data if personas not loaded yet
+      const personaData = window.personas || window.personasData;
+      
+      if (personaData) {
+        const categories = [
+          { name: 'Bahasa Indonesia', ids: [1, 2, 3, 4, 5, 6, 7, 8] },
+          { name: 'Bahasa Jawa & Osing', ids: [9, 10, 11, 12, 13, 14, 15, 16] },
+          { name: 'Campuran / Mixed', ids: [17, 18] },
+          { name: 'Sunda & Perbatasan', ids: [19, 20, 21] }
+        ];
+        
+        categories.forEach(category => {
+          const optgroup = document.createElement('optgroup');
+          optgroup.label = category.name;
+          
+          category.ids.forEach(id => {
+            const persona = personaData[id];
+            if (persona) {
+              const option = document.createElement('option');
+              option.value = id;
+              option.textContent = `${persona.icon} ${persona.name} - ${persona.region}`;
+              optgroup.appendChild(option);
+            }
+          });
+          
+          personaSelect.appendChild(optgroup);
+        });
+        
+        console.log('✅ Persona selector populated with', Object.keys(personaData).length, 'personas');
+      } else {
+        console.error('❌ Personas data not found');
+      }
+      
+      // Handle URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const personaId = urlParams.get('persona');
+      
+      if (personaId) {
+        // Set selected persona
+        personaSelect.value = personaId;
+        
+        // Trigger change event
+        const event = new Event('change', { bubbles: true });
+        personaSelect.dispatchEvent(event);
+        
+        // Hide welcome message
+        setTimeout(function() {
+          const welcome = document.getElementById('welcome');
+          if (welcome) {
+            welcome.style.display = 'none';
+          }
+          
+          // Scroll to chat box
+          const chatBox = document.querySelector('.chat-box');
+          if (chatBox) {
+            chatBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 300);
+        
+        console.log('✅ Auto-selected persona:', personaId);
+      }
+    }
+  });
+
+  // Navigation toggle
   (function () {
     const nav = document.querySelector('nav');
     if (!nav) return;
@@ -421,137 +574,50 @@
     });
   })();
 
-  let selectedPersona = null;
-  
-  // Populate persona selector
-  function populatePersonaSelect() {
-    const select = document.getElementById('persona-select');
-    Object.keys(personas).forEach(id => {
-      const persona = personas[id];
-      const option = document.createElement('option');
-      option.value = id;
-      option.textContent = `${persona.icon} ${persona.name} - ${persona.region}`;
-      select.appendChild(option);
-    });
-
-    // Cek query ?persona=... untuk pre-select dari halaman persona
-    const params = new URLSearchParams(window.location.search);
-    const initialPersona = params.get('persona');
-    if (initialPersona && personas[initialPersona]) {
-      select.value = initialPersona;
-      selectedPersona = initialPersona;
-      const persona = personas[initialPersona];
-      addBotMessage(`Halo! Sekarang aku pakai persona "${persona.name}". ${persona.desc.substring(0, 100)}...`);
-      document.getElementById('welcome').style.display = 'none';
-
-      if (typeof trackEvent === 'function') {
-        trackEvent('persona_open', initialPersona);
-      }
-    }
-  }
-  
-  // Handle persona selection
-  document.getElementById('persona-select').addEventListener('change', (e) => {
-    selectedPersona = e.target.value;
-    if (selectedPersona) {
-      const persona = personas[selectedPersona];
-      addBotMessage(`Halo! Sekarang aku pakai persona "${persona.name}". ${persona.desc.substring(0, 100)}...`);
-      document.getElementById('welcome').style.display = 'none';
-
-      // Track persona open dari halaman chat
-      if (typeof trackEvent === 'function') {
-        trackEvent('persona_open', selectedPersona);
-      }
-    }
-  });
-  
-  // Add message to chat
-  function addMessage(content, isUser = false) {
-    const messagesContainer = document.getElementById('chat-messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
-    
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-    avatar.textContent = isUser ? '👤' : (selectedPersona ? personas[selectedPersona].icon : '🤖');
-    
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'message-content';
-    contentDiv.textContent = content;
-    
-    messageDiv.appendChild(avatar);
-    messageDiv.appendChild(contentDiv);
-    messagesContainer.appendChild(messageDiv);
-    
-    // Scroll to bottom
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-  }
-  
-  function addBotMessage(content) {
-    addMessage(content, false);
-  }
-  
-  function addUserMessage(content) {
-    addMessage(content, true);
-  }
-  
-  // Simulate bot response
-  function getBotResponse(userMessage) {
-    if (!selectedPersona) {
-      return "Pilih persona dulu ya di dropdown di atas! 😊";
-    }
-    
-    const persona = personas[selectedPersona];
-    const lowerMsg = userMessage.toLowerCase();
-    
-    // Simple response logic based on persona
-    if (lowerMsg.includes('apa kabar') || lowerMsg.includes('hai') || lowerMsg.includes('halo')) {
-      return persona.sample;
-    } else if (lowerMsg.includes('nama')) {
-      return `Aku menggunakan persona ${persona.name} dari ${persona.region}. ${persona.desc}`;
-    } else if (lowerMsg.includes('ai') || lowerMsg.includes('teknologi')) {
-      return `${persona.sample.split('.')[0]}. Bicara tentang AI ya? Wah menarik nih!`;
-    } else if (lowerMsg.includes('makan') || lowerMsg.includes('makanan')) {
-      return `${persona.sample.split('.')[0]}. Soal makanan, setiap daerah punya keunikan sendiri!`;
-    } else {
-      return `${persona.sample} Saya paham maksud kamu!`;
-    }
-  }
-  
   // Handle form submit
-  document.getElementById('chat-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const input = document.getElementById('chat-input');
-    const message = input.value.trim();
-    
-    if (!message) return;
-    
-    // Add user message
-    addUserMessage(message);
-    input.value = '';
-
-    // Track chat message
-    if (typeof trackEvent === 'function') {
-      trackEvent('chat_message');
-    }
-    
-    // Simulate typing
-    setTimeout(() => {
-      const response = getBotResponse(message);
-      addBotMessage(response);
-    }, 500 + Math.random() * 1000);
-  });
-  
-  // Quick prompts
-  function sendQuickPrompt(text) {
-    document.getElementById('chat-input').value = text;
-    document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+  const chatForm = document.getElementById('chat-form');
+  if (chatForm) {
+    chatForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+    });
   }
   
-  // Initialize
-  populatePersonaSelect();
+  // Handle persona selector change
+  const personaSelect = document.getElementById('persona-select');
+  if (personaSelect) {
+    personaSelect.addEventListener('change', function() {
+      const welcome = document.getElementById('welcome');
+      if (welcome && this.value) {
+        welcome.style.display = 'none';
+      }
+    });
+  }
   
-  // Track page view
+  // Quick prompt function
+  window.sendQuickPrompt = function(text) {
+    const personaSelect = document.getElementById('persona-select');
+    if (!personaSelect || !personaSelect.value) {
+      if (window.toast) {
+        window.toast.warning('Pilih persona terlebih dahulu');
+      } else {
+        alert('Pilih persona terlebih dahulu');
+      }
+      return;
+    }
+    
+    const chatInput = document.getElementById('chat-input');
+    if (chatInput) {
+      chatInput.value = text;
+      chatInput.focus();
+      
+      // Hide welcome message
+      const welcome = document.getElementById('welcome');
+      if (welcome) {
+        welcome.style.display = 'none';
+      }
+    }
+  };
+
   if (typeof trackEvent === 'function') {
     trackEvent('page_view', '/chatbot.html');
   }

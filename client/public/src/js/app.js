@@ -29,12 +29,11 @@ function generateCharacterSVG(id, colors) {
   // Hitung index dasar 1..12 berulang
   let index = ((numId - 1) % 12) + 1;
 
-  // Override untuk index yang tidak punya file
-  if (index === 9) index = 10; // fallback ke character 10.png
+  // No override needed, we have character 9 fix.png
 
   return `
     <img 
-      src="character new arutala/character ${index}.png" 
+      src="assets/character ${index === 9 ? '9 fix' : index}.png" 
       alt="Persona character illustration #${index}" 
       class="char-svg"
     />

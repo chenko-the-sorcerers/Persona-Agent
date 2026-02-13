@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Daftar — Arutala Persona Agent</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+
+  <style>
+    .auth-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .auth-card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 24px 64px rgba(15,23,42,.18);
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 440px;
+      overflow: hidden;
+    }
+    /* Tab switcher */
+    .auth-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 16px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      border: none;
+      background: #f8fafc;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .auth-tab.active {
+      background: #fff;
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      margin-bottom: -2px;
+    }
+    .auth-tab:first-child { border-radius: 24px 0 0 0; }
+    .auth-tab:last-child  { border-radius: 0 24px 0 0; }
+
+    .auth-body { padding: 28px 28px 32px; }
+
+    .auth-logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .auth-logo-icon { font-size: 40px; display: block; margin-bottom: 6px; }
+    .auth-logo h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 0;
+    }
+    .auth-logo p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 4px 0 0;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    
+    /* Password wrapper untuk show/hide button */
+    .password-wrapper {
+      position: relative;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      transition: all .2s;
+      box-sizing: border-box;
+    }
+    
+    .password-wrapper input {
+      padding-right: 45px;
+    }
+    
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1;
+    }
+    
+    .toggle-password:hover {
+      color: var(--primary);
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(8,145,178,.12);
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, var(--primary), #0d9488);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .auth-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(8,145,178,.3);
+    }
+    .auth-btn:active { transform: translateY(0); }
+    .auth-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .alert {
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      display: none;
+    }
+    .alert.show { display: block; }
+    .alert-error {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+    }
+    .alert-success {
+      background: #dfd;
+      color: #3a3;
+      border: 1px solid #bfb;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .divider {
+      text-align: center;
+      margin: 16px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .forgot-link {
+      text-align: right;
+      margin-top: 8px;
+    }
+    
+    .forgot-link a {
+      font-size: 12px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .forgot-link a:hover {
+      text-decoration: underline;
+    }
+
+    .back-home {
+      text-align: center;
+      margin-top: 16px;
+    }
+    .back-home a {
+      font-size: 13px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back-home a:hover { text-decoration: underline; }
+  </style>
+</head>
+<!-- Nav -->
+<nav>
+  <div class="inner">
+    <a href="../../index.html" class="logo" style="text-decoration:none;">
+      <span style="font-weight:800; color: var(--primary);">Arutala</span>
+      <span class="brand">Persona Agent</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation">
+      <span class="nav-toggle-line"></span>
+      <span class="nav-toggle-line"></span>
+      <span class="nav-toggle-line"></span>
+    </button>
+    <div class="nav-links">
+      <a href="../../index.html" class="nav-link">Personas</a>
+      <a href="../../src/pages/chatbot.html" class="nav-link">Try Chat</a>
+      <a href="../../src/pages/about.html" class="nav-link">About</a>
+      <a href="../../src/pages/login.html" class="nav-link">Login</a>
+    </div>
+  </div>
+</nav>
+
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">LOGIN</button>
+        <button class="auth-tab" data-tab="register">DAFTAR</button>
+      </div>
+
+      <div class="auth-body">
+        <div class="auth-logo">
+          <span class="auth-logo-icon">🤖</span>
+          <h2>Arutala Persona Agent</h2>
+          <p>Selamat datang kembali!</p>
+        </div>
+
+        <!-- LOGIN PANEL -->
+        <div id="login-panel" class="panel active">
+          <div id="login-alert" class="alert"></div>
+          <form id="login-form">
+            <div class="form-group">
+              <label for="login-email">Email</label>
+              <input type="email" id="login-email" placeholder="nama@email.com" required />
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <div class="password-wrapper">
+                <input type="password" id="login-password" placeholder="••••••••" required />
+                <button type="button" class="toggle-password" data-target="login-password">
+                  👁️
+                </button>
+              </div>
+            </div>
+            <div class="forgot-link">
+              <a href="../../forgot-password.html">Lupa password?</a>
+            </div>
+            <button type="submit" class="auth-btn" id="login-btn">Masuk</button>
+          </form>
+        </div>
+
+        <!-- REGISTER PANEL -->
+        <div id="register-panel" class="panel">
+          <div id="register-alert" class="alert"></div>
+          <form id="register-form">
+            <div class="form-group">
+              <label for="register-name">Nama Lengkap</label>
+              <input type="text" id="register-name" placeholder="Nama Anda" required />
+            </div>
+            <div class="form-group">
+              <label for="register-email">Email</label>
+              <input type="email" id="register-email" placeholder="nama@email.com" required />
+            </div>
+            <div class="form-group">
+              <label for="register-password">Password</label>
+              <div class="password-wrapper">
+                <input type="password" id="register-password" placeholder="Min. 6 karakter" required />
+                <button type="button" class="toggle-password" data-target="register-password">
+                  👁️
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="auth-btn" id="register-btn">Daftar</button>
+          </form>
+        </div>
+
+        <div class="back-home">
+          <a href="../../index.html">← Kembali ke Beranda</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script>
+    // Tab switcher
+    const tabs = document.querySelectorAll('.auth-tab');
+    const panels = document.querySelectorAll('.panel');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.tab;
+        tabs.forEach(t => t.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(target + '-panel').classList.add('active');
+      });
+    });
+
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.target;
+        const input = document.getElementById(targetId);
+        
+        if (input.type === 'password') {
+          input.type = 'text';
+          btn.textContent = '🙈';
+        } else {
+          input.type = 'password';
+          btn.textContent = '👁️';
+        }
+      });
+    });
+
+    function showAlert(id, msg, type) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.className = `alert alert-${type} show`;
+      setTimeout(() => { el.className = 'alert'; }, 4000);
+    }
+
+    // LOGIN FORM
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const btn = document.getElementById('login-btn');
+
+      if (!email || !password) {
+        return showAlert('login-alert', 'Email dan password wajib diisi', 'error');
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Memproses...';
+
+      try {
+        const res = await fetch(`${API_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          showAlert('login-alert', 'Login berhasil! Mengalihkan...', 'success');
+          setTimeout(() => {
+            window.location.href = '../../chatbot.html';
+          }, 1000);
+        } else {
+          showAlert('login-alert', data.message || 'Login gagal', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Masuk';
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        showAlert('login-alert', 'Tidak dapat terhubung ke server', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Masuk';
+      }
+    });
+
+    // REGISTER FORM
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('register-name').value.trim();
+      const email = document.getElementById('register-email').value.trim();
+      const password = document.getElementById('register-password').value;
+      const btn = document.getElementById('register-btn');
+
+      if (!name || !email || !password) {
+        return showAlert('register-alert', 'Semua field wajib diisi', 'error');
+      }
+      if (password.length < 6) {
+        return showAlert('register-alert', 'Password minimal 6 karakter', 'error');
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Mendaftar...';
+
+      try {
+        const res = await fetch(`${API_URL}/api/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          showAlert('register-alert', 'Registrasi berhasil! Mengalihkan...', 'success');
+          setTimeout(() => {
+            window.location.href = '../../chatbot.html';
+          }, 1000);
+        } else {
+          showAlert('register-alert', data.message || 'Registrasi gagal', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Daftar';
+        }
+      } catch (err) {
+        console.error('Register error:', err);
+        showAlert('register-alert', 'Tidak dapat terhubung ke server', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Daftar';
+      }
+    });
+  </script>
+</body>
+</html>

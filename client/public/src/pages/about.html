@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../css/styles.css" />
   
   <style>
     .about-container {
@@ -251,7 +251,7 @@
 <!-- Nav -->
 <nav>
   <div class="inner">
-    <a href="index.html" class="logo" style="text-decoration:none;">
+    <a href="../../index.html" class="logo" style="text-decoration:none;">
       <span style="font-weight:800; color: var(--primary);">Arutala</span>
       <span class="brand">Persona Agent</span>
     </a>
@@ -261,10 +261,10 @@
       <span class="nav-toggle-line"></span>
     </button>
     <div class="nav-links">
-      <a href="index.html" class="nav-link">Personas</a>
-      <a href="chatbot.html" class="nav-link">Try Chat</a>
-      <a href="login.html" class="nav-link">Login</a>
+      <a href="../../index.html" class="nav-link">Personas</a>
+      <a href="../../chatbot.html" class="nav-link">Try Chat</a>
       <a href="about.html" class="nav-link">About</a>
+      <a href="login.html" class="nav-link">Login</a>
     </div>
   </div>
 </nav>
@@ -371,7 +371,7 @@
       Rasakan pengalaman berkomunikasi dengan AI dalam berbagai gaya bahasa Indonesia
     </p>
     <div class="cta-buttons">
-      <a href="index.html" class="cta-button primary">
+      <a href="../../index.html" class="cta-button primary">
         Lihat Semua Persona
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -402,7 +402,7 @@
   <p style="margin-top:16px; font-size:12px; opacity:0.6;">© 2025 Arutala Aksara. All rights reserved.</p>
 </footer>
 
-<script src="analytics.js"></script>
+<script src="../js/analytics.js"></script>
 <script>
   (function () {
     const nav = document.querySelector('nav');
@@ -421,7 +421,7 @@
   })();
 
   if (typeof trackEvent === 'function') {
-    trackEvent('page_view', '/about.html');
+    trackEvent('page_view', '/src/pages/about.html');
   }
 </script>
 

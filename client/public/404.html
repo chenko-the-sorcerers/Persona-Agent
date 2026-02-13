@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 - Halaman Tidak Ditemukan | Arutala Persona Agent</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #184bcb;
+      --primary-dark: #0e7490;
+      --bg: #fafafa;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blob-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: blobFloat 12s ease-in-out infinite alternate;
+    }
+
+    .blob-1 {
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, #a855f7, #ec4899);
+      top: -120px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .blob-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #06b6d4, #10b981);
+      bottom: -80px;
+      right: -80px;
+      animation-delay: -3s;
+    }
+
+    @keyframes blobFloat {
+      from { transform: translate(0,0) scale(1); }
+      to { transform: translate(30px, 40px) scale(1.08); }
+    }
+
+    .error-container {
+      text-align: center;
+      max-width: 600px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .error-code {
+      font-size: 120px;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--primary), #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      letter-spacing: -4px;
+    }
+
+    .error-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .error-message {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(24, 75, 203, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(24, 75, 203, 0.15);
+    }
+
+    .emoji {
+      font-size: 80px;
+      margin-bottom: 24px;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 640px) {
+      .error-code {
+        font-size: 80px;
+        letter-spacing: -2px;
+      }
+      .error-title {
+        font-size: 24px;
+      }
+      .error-message {
+        font-size: 14px;
+      }
+      .emoji {
+        font-size: 60px;
+      }
+      .error-actions {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="blob-field">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+</div>
+
+<div class="error-container">
+  <span class="emoji">🔍</span>
+  <div class="error-code">404</div>
+  <h1 class="error-title">Halaman Tidak Ditemukan</h1>
+  <p class="error-message">
+    Maaf, halaman yang Anda cari tidak ada atau telah dipindahkan. 
+    Silakan kembali ke halaman utama atau hubungi kami jika Anda yakin ini adalah kesalahan.
+  </p>
+  <div class="error-actions">
+    <a href="index.html" class="btn btn-primary">
+      <span>🏠</span>
+      <span>Kembali ke Beranda</span>
+    </a>
+    <button onclick="history.back()" class="btn btn-secondary">
+      <span>←</span>
+      <span>Halaman Sebelumnya</span>
+    </button>
+  </div>
+</div>
+
+</body>
+</html>

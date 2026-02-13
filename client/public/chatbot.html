@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Try Chat — Arutala Persona Agent</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="src/css/styles.css" />
+
+  <script>
+    // Personas data inline untuk immediate availability
+    window.personasData = {
+      1:{name:"Formal / Resmi",region:"Bahasa Indonesia Baku",icon:"💼"},
+      2:{name:"Jaksel",region:"Jakarta Selatan Urban",icon:"☕"},
+      3:{name:"Non-Baku Harian",region:"Bahasa Indonesia Sehari-hari",icon:"💬"},
+      4:{name:"Gen Z Viral",region:"TikTok / Bahasa Gaul",icon:"🔥"},
+      5:{name:"Gen Alpha Brainrot",region:"Internet Culture / Gaming",icon:"🎮"},
+      6:{name:"Corporate",region:"Bahasa Indonesia Bisnis",icon:"📊"},
+      7:{name:"Akademis",region:"Bahasa Indonesia Ilmiah",icon:"🎓"},
+      8:{name:"Kalimat Pasif",region:"Bahasa Indonesia Formal Pasif",icon:"📄"},
+      9:{name:"Jawa Baku",region:"Jawa Tengah / Yogyakarta",icon:"🏛️"},
+      10:{name:"Jawa Ngoko",region:"Jawa Blak-blakan",icon:"🗣️"},
+      11:{name:"Jawa Suroboyoan",region:"Surabaya / Jawa Timur",icon:"🌊"},
+      12:{name:"Jawa Madiun",region:"Madiun / Nganjuk",icon:"🌾"},
+      13:{name:"Jawa Semarangan",region:"Semarang Pesisir",icon:"⚓"},
+      14:{name:"Jawa Solo",region:"Surakarta Mataram",icon:"👑"},
+      15:{name:"Jawa Banyumasan",region:"Purwokerto / Banyumas",icon:"🌄"},
+      16:{name:"Osing Banyuwangi",region:"Using / Banyuwangi",icon:"🌅"},
+      17:{name:"Campuran Jawa-Indo",region:"Mixed Natural",icon:"🔀"},
+      18:{name:"Jowo-Kawi",region:"Javanese-Indonesian Hybrid",icon:"🎭"},
+      19:{name:"Sunda Lemes",region:"Bandung Halus",icon:"🌸"},
+      20:{name:"Jawara Banten",region:"Serang / Tangerang",icon:"⚔️"},
+      21:{name:"Cirebon",region:"Cirebon Fusion",icon:"🌊"}
+    };
+  </script>
+
+  <!-- Load config + auth (NO auth guard — chatbot accessible to all) -->
+  <script src="src/js/config.js"></script>
+  <script src="src/js/auth.js"></script>
+  <script src="src/js/data.js"></script>
+  <script src="src/js/persona.js"></script>
+  <script src="src/js/utils/helpers.js"></script>
+  <script src="src/js/api.js"></script>
+  <script src="src/js/main.js"></script>
+  <script src="src/js/chat.js"></script>
+
+  <style>
+    .chat-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+      min-height: calc(100vh - 200px);
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-header { text-align: center; margin-bottom: 28px; }
+    .chat-header h1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+    .chat-header p  { color: var(--muted); font-size: 15px; }
+
+    .login-banner {
+      background: linear-gradient(135deg, rgba(8,145,178,.08), rgba(14,116,144,.05));
+      border: 1.5px solid rgba(8,145,178,.2);
+      border-radius: 14px;
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .login-banner a {
+      background: var(--primary);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 12px;
+      white-space: nowrap;
+      transition: all .2s;
+    }
+    .login-banner a:hover { background: var(--primary-dark, #0e7490); }
+
+    .persona-selector {
+      background: white;
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--border);
+    }
+    .persona-selector label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .persona-selector select {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      background: white;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .persona-selector select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(8,145,178,.1);
+    }
+
+    .chat-box {
+      flex: 1;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      min-height: 480px;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .message {
+      display: flex;
+      gap: 10px;
+      max-width: 80%;
+      animation: fadeUp .3s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .message-user      { align-self: flex-end; flex-direction: row-reverse; }
+    .message-assistant { align-self: flex-start; }
+    .message-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+      background: #f1f5f9;
+    }
+    .message-user .message-avatar { background: var(--primary); color: white; font-size: 13px; font-weight: 700; }
+    .message-bubble {
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .message-user      .message-bubble { background: var(--primary); color: white; border-radius: 12px 4px 12px 12px; }
+    .message-assistant .message-bubble { background: #f1f5f9; color: var(--text); border-radius: 4px 12px 12px 12px; }
+    .message-content { white-space: pre-wrap; word-wrap: break-word; }
+    .message-time { font-size: 10px; opacity: .55; margin-top: 3px; }
+
+    .typing-indicator .typing-dots { display: flex; gap: 4px; padding: 6px 0; }
+    .typing-dots span {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: bounce 1.4s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: .2s; }
+    .typing-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); opacity: .5; }
+      30%          { transform: translateY(-8px); opacity: 1; }
+    }
+
+    .chat-input-wrapper {
+      padding: 16px 18px;
+      border-top: 2px solid var(--border);
+      background: #fafafa;
+    }
+    .chat-input-form { display: flex; gap: 10px; align-items: center; }
+    .chat-input-form input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      transition: all .2s;
+    }
+    .chat-input-form input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(8,145,178,.1);
+    }
+    .chat-send-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+    .chat-send-btn:hover { background: var(--primary-dark, #0e7490); transform: translateY(-1px); }
+
+    .welcome-msg { text-align: center; padding: 36px 20px; color: var(--muted); }
+    .welcome-msg h3 { font-size: 17px; color: var(--text); margin-bottom: 6px; }
+    .quick-prompts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; justify-content: center; }
+    .quick-prompt {
+      padding: 7px 14px;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .quick-prompt:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
+
+    @media (max-width: 640px) {
+      .chat-container { padding: 20px 12px 40px; }
+      .chat-box { min-height: 400px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="blob-field">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="inner">
+    <a href="index.html" class="logo" style="text-decoration:none;">
+      <span style="font-weight:800;color:var(--primary);">Arutala</span>
+      <span class="brand">Persona Agent</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation">
+      <span class="nav-toggle-line"></span>
+      <span class="nav-toggle-line"></span>
+      <span class="nav-toggle-line"></span>
+    </button>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Personas</a>
+      <a href="chatbot.html" class="nav-link active">Try Chat</a>
+      <a href="src/pages/about.html" class="nav-link">About</a>
+      <!-- Auth-aware nav items (filled by JS) -->
+      <div id="nav-auth"></div>
+    </div>
+  </div>
+</nav>
+
+<div class="chat-container">
+  <div class="chat-header">
+    <h1>🗣️ Coba Persona Agent</h1>
+    <p>Pilih persona dan mulai ngobrol dengan gaya bahasa yang berbeda!</p>
+  </div>
+
+  <!-- Login banner for guests -->
+  <div class="login-banner" id="login-banner" style="display:none;">
+    <span>💡 Login untuk menyimpan riwayat percakapanmu</span>
+    <a href="src/pages/login.html">Login / Daftar</a>
+  </div>
+
+  <!-- Persona selector -->
+  <div class="persona-selector">
+    <label for="persona-select">Pilih Persona:</label>
+    <select id="persona-select">
+      <option value="">— Pilih Persona —</option>
+    </select>
+  </div>
+
+  <!-- Chat box -->
+  <div class="chat-box">
+    <div class="chat-messages" id="chat-messages">
+      <div class="welcome-msg" id="welcome">
+        <h3>👋 Selamat datang!</h3>
+        <p>Pilih persona di atas, lalu mulai chat atau klik salah satu contoh:</p>
+        <div class="quick-prompts">
+          <div class="quick-prompt" onclick="sendQuickPrompt('Hai! Apa kabar?')">Hai! Apa kabar?</div>
+          <div class="quick-prompt" onclick="sendQuickPrompt('Ceritain tentang AI dong')">Ceritain tentang AI</div>
+          <div class="quick-prompt" onclick="sendQuickPrompt('Rekomendasiin tempat makan yuk')">Rekomendasiin tempat makan</div>
+          <div class="quick-prompt" onclick="sendQuickPrompt('Jelasin apa itu machine learning')">Apa itu machine learning?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-wrapper">
+      <form class="chat-input-form" id="chat-form">
+        <input type="text" id="chat-input" placeholder="Ketik pesan..." autocomplete="off" />
+        <button type="submit" class="chat-send-btn">Kirim ➤</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Arutala Persona Agent</div>
+  <p>Merayakan keberagaman Bahasa Daerah di Indonesia 🇮🇩</p>
+</footer>
+
+<script src="src/js/analytics.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    // ── Nav auth state ──────────────────────────────────────
+    const navAuth = document.getElementById('nav-auth');
+    if (window.authService && authService.isAuthenticated()) {
+      const user = authService.getUser();
+      const name = user.name || user.email.split('@')[0];
+      navAuth.innerHTML = `
+        <span style="display:flex;align-items:center;gap:8px;">
+          <a href="src/pages/dashboard.html" class="nav-link" style="background:rgba(8,145,178,.1);color:var(--primary);">👤 ${name}</a>
+          <button onclick="handleNavLogout()" style="background:none;border:1.5px solid rgba(148,163,184,.5);color:var(--muted);padding:6px 12px;border-radius:8px;font-family:'Poppins';font-size:12px;font-weight:700;cursor:pointer;">Keluar</button>
+        </span>
+      `;
+    } else {
+      navAuth.innerHTML = `<a href="src/pages/login.html" class="nav-link">Login</a>`;
+      // Show login banner for guests
+      document.getElementById('login-banner').style.display = 'flex';
+    }
+
+    // ── Populate persona selector ───────────────────────────
+    const select = document.getElementById('persona-select');
+    const pData  = window.personas || window.personasData;
+
+    if (pData) {
+      const groups = [
+        { label: 'Bahasa Indonesia', ids: [1,2,3,4,5,6,7,8] },
+        { label: 'Bahasa Jawa & Osing', ids: [9,10,11,12,13,14,15,16] },
+        { label: 'Campuran / Mixed', ids: [17,18] },
+        { label: 'Sunda & Perbatasan', ids: [19,20,21] },
+      ];
+      groups.forEach(g => {
+        const og = document.createElement('optgroup');
+        og.label = g.label;
+        g.ids.forEach(id => {
+          const p = pData[id];
+          if (!p) return;
+          const opt = document.createElement('option');
+          opt.value = id;
+          opt.textContent = `${p.icon} ${p.name} — ${p.region}`;
+          og.appendChild(opt);
+        });
+        select.appendChild(og);
+      });
+    }
+
+    // ── Handle URL ?persona=N (from "Try Chat" button on persona cards) ──
+    const params    = new URLSearchParams(window.location.search);
+    const personaId = params.get('persona');
+    if (personaId) {
+      select.value = personaId;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      setTimeout(() => {
+        const welcome = document.getElementById('welcome');
+        if (welcome) welcome.style.display = 'none';
+        document.querySelector('.chat-box')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 200);
+    }
+
+    // ── Persona change → hide welcome ──────────────────────
+    select.addEventListener('change', function () {
+      const welcome = document.getElementById('welcome');
+      if (welcome && this.value) welcome.style.display = 'none';
+    });
+
+    // ── Nav toggle ─────────────────────────────────────────
+    const nav    = document.querySelector('nav');
+    const toggle = nav?.querySelector('.nav-toggle');
+    const links  = nav?.querySelector('.nav-links');
+    if (toggle && links) {
+      toggle.addEventListener('click', () => nav.classList.toggle('nav-open'));
+      links.addEventListener('click', e => {
+        if (e.target.closest('.nav-link')) nav.classList.remove('nav-open');
+      });
+    }
+  });
+
+  // ── Quick prompts ──────────────────────────────────────────
+  window.sendQuickPrompt = function (text) {
+    const select = document.getElementById('persona-select');
+    if (!select || !select.value) {
+      if (window.toast) window.toast.warning('Pilih persona terlebih dahulu!');
+      else alert('Pilih persona terlebih dahulu!');
+      return;
+    }
+    const input = document.getElementById('chat-input');
+    if (input) {
+      input.value = text;
+      input.focus();
+      const welcome = document.getElementById('welcome');
+      if (welcome) welcome.style.display = 'none';
+    }
+  };
+
+  // ── Logout from nav ────────────────────────────────────────
+  window.handleNavLogout = async function () {
+    if (!confirm('Yakin ingin logout?')) return;
+    await authService.logout();
+    location.reload();
+  };
+
+  if (typeof trackEvent === 'function') trackEvent('page_view', '/chatbot.html');
+</script>
+
+</body>
+</html>

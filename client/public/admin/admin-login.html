@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Arutala Persona Agent</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .wrap { max-width: 420px; width: 100%; }
+
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 40px 36px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    }
+
+    .card-header { text-align: center; margin-bottom: 28px; }
+    .card-icon   { font-size: 52px; display: block; margin-bottom: 14px; }
+    .admin-badge {
+      display: inline-block;
+      background: #ef4444;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .card-header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+    .card-header p { font-size: 13px; color: #64748b; }
+
+    .notice {
+      background: #fef3c7;
+      border: 1px solid #fbbf24;
+      color: #92400e;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      transition: all .2s;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,.1);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(239,68,68,.3);
+      transition: transform .15s, box-shadow .15s;
+      margin-top: 6px;
+    }
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(239,68,68,.4);
+    }
+    .submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    .error-msg {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      margin-bottom: 14px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #64748b; }
+    .back-link {
+      text-align: center;
+      margin-top: 18px;
+    }
+    .back-link a {
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .back-link a:hover { color: white; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-icon">🔐</span>
+      <div class="admin-badge">Admin Only</div>
+      <h1>Admin Dashboard</h1>
+      <p>Restricted Access — Authorized Personnel Only</p>
+    </div>
+
+    <div class="notice">
+      <span>⚠️</span>
+      <span>Area terbatas. Semua percobaan login dicatat.</span>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+
+    <form id="admin-form">
+      <div class="form-group">
+        <label for="admin-email">Admin Email</label>
+        <input type="email" id="admin-email" placeholder="admin@arutala.com" autocomplete="username" required />
+      </div>
+      <div class="form-group">
+        <label for="admin-password">Admin Password</label>
+        <input type="password" id="admin-password" placeholder="Password admin" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="submit-btn" id="login-btn">🔓 Masuk ke Dashboard</button>
+    </form>
+
+    <div class="footer">Untuk bantuan admin, hubungi tim IT.</div>
+  </div>
+
+  <div class="back-link">
+    <a href="../../index.html">← Kembali ke Main Site</a>
+  </div>
+</div>
+
+<!-- Scripts — load auth FIRST before login logic -->
+<script src="../../src/js/config.js"></script>
+<script src="../../src/js/main.js"></script>
+<script src="../../src/js/auth.js"></script>
+
+<script>
+  // ── If already logged in as admin, go straight to dashboard ──
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.authService && authService.isAuthenticated()) {
+      const user = authService.getUser();
+      if (user && user.role === 'admin') {
+        window.location.replace('dashboard.html');
+        return;
+      }
+    }
+  });
+
+  // ── Admin login form ───────────────────────────────────────
+  document.getElementById('admin-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const email    = document.getElementById('admin-email').value.trim();
+    const password = document.getElementById('admin-password').value;
+    const errEl    = document.getElementById('error-msg');
+    const btn      = document.getElementById('login-btn');
+
+    errEl.classList.remove('show');
+
+    if (!email || !password) {
+      errEl.textContent = 'Email dan password wajib diisi.';
+      return errEl.classList.add('show');
+    }
+
+    btn.disabled    = true;
+    btn.textContent = '🔄 Memverifikasi...';
+
+    const result = await authService.adminLogin(email, password);
+
+    if (result.success) {
+      // Direct redirect to admin dashboard
+      window.location.replace('dashboard.html');
+    } else {
+      errEl.textContent = result.message || 'Kredensial admin tidak valid.';
+      errEl.classList.add('show');
+      btn.disabled    = false;
+      btn.textContent = '🔓 Masuk ke Dashboard';
+    }
+  });
+
+  // Enter key submit
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      document.getElementById('admin-form').dispatchEvent(new Event('submit'));
+    }
+  });
+</script>
+
+</body>
+</html>
